@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: route_baidu # 路由的编号
+          uri: https://www.baidu.com # 路由到的目标地址
+          predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
+            - Path=/bd
+          filters:
+            - StripPrefix=1
+        - id: route_google # 路由的编号
+          uri: https://google.qinai.blog # 路由的目标地址
+          predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
+            - Path=/gg
+          filters: # 过滤器，对请求进行拦截，实现自定义的功能，对应 FilterDefinition 数组
+            - StripPrefix=1
+      #自定义鉴权拦截器
+      default-filters:
+        - name: Auth
+          args:
+            #设置 token-header-name 配置项为 access-token，表示从请求 Header access-token 获得认证 Token。
+            token-header-name: access-token
